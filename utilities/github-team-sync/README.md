@@ -4,6 +4,20 @@ Syncs GitHub organization teams to Semgrep RBAC teams, including members and rep
 
 > **Disclaimer:** This is a sample application that demonstrates how to use the Semgrep APIs. It is not officially supported by Semgrep. Use at your own risk.
 
+## Overview
+
+This is a proof-of-concept script demonstrating how to use the [Semgrep v2 Teams API](https://semgrep.dev/api/v2/docs/#tag/TeamsService), which is currently in beta. It has been tested against the following use cases:
+
+1. **Creating a new team from scratch** — a GitHub team with no corresponding Semgrep team is created in Semgrep with the correct members and repositories
+2. **Adding members and repos from GitHub** — an existing Semgrep team is updated when new users or repositories have been added to the team in GitHub
+3. **Removing members and repos added directly in Semgrep** — if users or repositories were added to a Semgrep team outside of GitHub, they will be removed so the team matches GitHub
+4. **Combination of the above** — members and repos can be added and removed in the same sync run
+
+### Known limitations
+
+- **Team deletion is not handled.** If a team is deleted in GitHub, the corresponding Semgrep team will not be deleted. Manual cleanup in Semgrep is required.
+- The v2 Teams API is in beta and may change.
+
 ## What it does
 
 For each team in a GitHub organization, the script will:
@@ -116,3 +130,4 @@ INFO: Sync complete.
 - GitHub users not found in Semgrep (e.g., users who haven't logged in yet) are skipped with a warning
 - Repositories present in GitHub but not yet added to Semgrep are skipped with a warning
 - The `--dry-run` flag fetches all data and logs what would change, but makes no API writes
+- Teams deleted in GitHub are **not** automatically deleted in Semgrep — these must be removed manually
